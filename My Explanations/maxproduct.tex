@@ -1,0 +1,516 @@
+\documentclass[10pt]{article}
+\usepackage{amsmath}
+\usepackage{xltxtra}
+\usepackage{unicode-math}
+\setmathfont{Asana-Math.otf}
+\usepackage{pstricks-add}
+\usepackage{geometry}
+\geometry{
+ a4paper,
+ total={210mm,297mm},
+ left=10mm,
+ right=10mm,
+ top=15mm,
+ bottom=15mm,
+ }
+ \usepackage{xcolor,colortbl}\usepackage{multirow}
+\setmainfont[Mapping=tex-text]{Garamond Premier Pro}
+\usepackage{graphicx}\usepackage{sidecap}\usepackage{bbm}
+\title{\textbf{Brief Explanation Of The Code In ''2016/hw8/maxproduct.m''}}
+\author{George Papadopoulos}\date{pgeorgios8@gmail.com}
+\newcommand{\dsp}{\displaystyle}
+\setlength\parindent{0pt}
+\usepackage{pstricks-add}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=cyan}
+\begin{document}
+ \maketitle
+ \begin{abstract}
+In response to an email asking clarifications for  the code in 
+''2016/hw8/maxproduct.m'',  
+in this small informal article we explore the  solution of the fifth problem and 
+the algorithmic process that leads to its solution more thoroughly. It is the author's 
+view, meaning ''my opinion'' that this is the most difficult problem  of the eighth 
+module and the most time consuming to solve throughout the course.\par
+This article is divided into  two sections, describing the two 
+steps of this solution and the abstract thinking behind the first step that led to the 
+second.\par
+The problem we are asked to solve is to write a program with two inputs, a 
+matrix \textit{A} and a \textbf{positive} integer \textit{n} (radius) that gives as 
+output the indexes of the maximum product of n consecutive elements of the matrix in all 
+directions, meaning row, column, diagonal and cross diagonal directions, firstly in 
+ascending  row wise order and secondly 
+if all the elements belong to the 
+same row in ascending column wise 
+order. If no such product exists, the 
+output must return the empty array 
+and in the case of multiple maximum 
+products the output must return the 
+first one found.[\href{https://projecteuler.net/problem=11}{Problem 11 - Euler Project} ]
+ \end{abstract}
+In the two following sections for simplicity reasons \footnote{$\rm\TeX$ typesetting 
+might be difficult some times believe me.} we will use the $2\times2$ matrix \[
+ A=\left[\begin{matrix}2 & 3 \\ 4 & 1\end{matrix}\right]\] for which is obvious that the 
+output we should expect is $[1,2]$ and $[2,1]$, since $A(1,2)\cdot A(2,1) = 12$ which is 
+the maximum of all the possible products of two consecutive elements in this matrix.
+\section{String Assignment.} The problem we should first consider is that some elements 
+miss some directions that lead to an error \footnote{Index  exceeds matrix dimensions.}, 
+since {\color{red}\textbf{matlab}} expects only valid operations to be conducted and 
+expects from the end user to respect that principle, for example we cannot get the third 
+element of a two dimensional array. The first information we are given  is that we should 
+search in eight directions diagonal, cross diagonal, horizontal and vertical, the second 
+information is that we should compute in the valid directions (the ones that exist) the 
+product of n  consecutive elements and store it ''somewhere'' along with the indexes, 
+then when all the elements of the matrix are scanned, go back to find where the maximum 
+product was found in the matrix.\par
+Suppose we are ''somewhere'' on a dangerous terrain and the only tool we have in our 
+hands is a compass with eight directions starting from north west in a clockwise 
+direction each denoted by two letters  NW, NO, NE, EA, SE, SO, SW, WE 
+\footnote{north-west, north, north-east, east, south-east, south, south-west, west}  and 
+a piece of paper with some letters and numbers next to them like the following 
+\begin{center}\begin{tabular}{c|r}Direction & Steps \\ NE & 3\\NO&2\\WE & 
+2\end{tabular}\end{center}that give us the safe path we can walk on in order  to avoid 
+the pits and find the exit. We can imagine that at each point we will have to  stop, we 
+are standing on an element of a matrix around which the ''x'' denotes a point of the path 
+and 
+the ''o'' a pit we should avoid,\vspace{15pt}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c||c|}
+\hline
+o & o & x & x & exit &compass\\\hline
+o & o & x & o & 
+o&\multirow{4}{*}{\scalebox{0.5}{\psset{xunit=0.6cm,yunit=0.6cm,algebraic=true,
+dimen=middle , dotstyle=o , dotsize=5pt 
+0,linewidth=1.6pt,arrowsize=3pt 2,arrowinset=0.25}
+\begin{pspicture*}(-3,-3)(3,3)
+\psline[linewidth=2.pt]{->}(0.,-2.)(0.,2.)
+\psline[linewidth=2.pt]{->}(-2.,0.)(2.,0.)
+\psline[linewidth=2.pt]{->}(-1.,-1.)(1.,1.)
+\psline[linewidth=2.pt]{->}(1.,-1.)(-1.,1.)
+\psline[linewidth=2.pt]{->}(0.,2.)(0.,-2.)
+\psline[linewidth=2.pt]{->}(2.,0.)(-2.,0.)
+\psline[linewidth=2.pt]{->}(-1.,1.)(1.,-1.)
+\psline[linewidth=2.pt]{->}(1.,1.)(-1.,-1.)
+\rput[tl](-0.4,2.45){NO}
+\rput[tl](1,1.4){NE}
+\rput[tl](-1.6,1.4){NW}
+\rput[tl](2.1,0.12){EA}
+\rput[tl](1.05,-1.124){SE}
+\rput[tl](-0.4,-2.15){SO}
+\rput[tl](-1.6,-1.124){SW}
+\rput[tl](-3,0.12){WE}
+\end{pspicture*}}}\\\cline{1-5}
+o & o & x & o &o&\\\cline{1-5}
+o & x & o & o & o&\\\cline{1-5}
+x & o & o & o &o&\\\hline
+\end{tabular}
+\end{center}% 2 3 4 1 Christine 
+\vspace{15pt}
+so what if we followed the same logic in our problem? Suppose we are standing at position 
+$(2,1)$ of matrix A, with the same logic described above we can imagine an image like the 
+one below
+\newcommand{\mc}[3]{\multicolumn{#1}{#2}{#3}}
+\definecolor{tcA}{rgb}{1,0,0}
+\begin{center}
+\begin{tabular}{cccclll}
+\textcolor{tcA}{o} & \textcolor{tcA}{o} & \textcolor{tcA}{o} & \textcolor{tcA}{o} &  & 
+& \\\cline{2-3}
+\mc{1}{c|}{\textcolor{tcA}{o}} & \mc{1}{c|}{2} & \mc{1}{c|}{3} & \textcolor{tcA}{o} &  & 
+NO & NE\\\cline{2-3}
+\mc{1}{c|}{\textcolor{tcA}{o}} & \mc{1}{c|}{4} & \mc{1}{c|}{1} & \textcolor{tcA}{o} & 
+$\longrightarrow$ & we are here valid moves for A(2,1) & EA\\\cline{2-3}
+\textcolor{tcA}{o} & \textcolor{tcA}{o} & \textcolor{tcA}{o} & \textcolor{tcA}{o} &  & 
+& 
+\end{tabular}
+\end{center}
+so we can write the \textit{valid} directions for $A(2,1)$ a a sting sequence like 
+'NONEEA' which is translated into north, north-east, east. What if we used a \text{fixed} 
+string with all the directions starting from NW in the clockwise direction? So let 
+$\text{directions}\;=\;''\hspace{-2.6pt}NWNONEEASESOSWWE''$, which is a 16-bit string. 
+For every element of a matrix we can check each direction by getting two bits at a time 
+of the string ''directions'' and replace them if there is no path of length n to the 
+specified direction with an $''xx''$ 2-bit string. So if we found a way understood by the 
+computer to do the checking for $A(1,1)$ for $n=2$ we would get the string 
+$''xxxxxxEASESOxxxx''\;\dagger$, meaning that the valid paths are east, south-east and 
+south. An easy way to do it with {\color{red}matlab} would be to create a cell  of 
+the same size of matrix $A$ and assign to its empty positions the outputs of the form 
+$\dagger$. For our case a schema showing the above description would be
+\vspace{-10pt}
+\begin{center}
+\begin{pspicture}(0,-2.42)(9.151563,2.42)
+\definecolor{color235}{rgb}{0.9764705882352941,0.03529411764705882,0.023529411764705882}
+\definecolor{color236}{rgb}{1.0,0.0,0.03529411764705882}
+\psline[linewidth=0.04](0.22,0.61)(0.0,0.61)(0.0,-0.77)(0.2,-0.77)(0.08,-0.77)
+\usefont{T1}{ptm}{m}{n}
+\rput(1.1676563,0.355){3}
+\usefont{T1}{ptm}{m}{n}
+\rput(0.5409375,-0.405){4}
+\usefont{T1}{ptm}{m}{n}
+\rput(0.53859377,0.355){2}
+\usefont{T1}{ptm}{m}{n}
+\rput(1.146875,-0.405){1}
+\psline[linewidth=0.04](1.4,0.61)(1.62,0.61)(1.62,-0.73)(1.42,-0.73)
+\psbezier[linewidth=0.02,linecolor=red,arrowsize=0.05291667cm 
+2.0,arrowlength=1.4,arrowinset=0.4]{->>}(0.62,0.51)(2.3518436,1.87)(3.78,0.33)(3.92,0.13)
+\psbezier[linewidth=0.02,linecolor=red,arrowsize=0.05291667cm 
+2.0,arrowlength=1.4,arrowinset=0.4]{->>}(1.3,0.5570134)(1.3,0.3782243)(4.3,2.41)(7.78,
+0.05)
+\usefont{T1}{ptm}{m}{n}
+\rput(3.9154687,-0.225){xxxxxxEASESOxxxx}
+\usefont{T1}{ptm}{m}{n}
+\rput(7.5134373,-0.225){xxxxxxxxxxSOSWWE}
+\usefont{T1}{ptm}{m}{n}
+\rput(3.9554687,-0.685){xxNONEEAxxxxxxxx}
+\usefont{T1}{ptm}{m}{n}
+\rput(7.478125,-0.665){NWNOxxxxxxxxxxWE}
+\psbezier[linewidth=0.02,linecolor=color235,arrowsize=0.05291667cm 
+2.0,arrowlength=1.4,arrowinset=0.4]{->>}(0.56,-0.59)(0.7168705,-0.65529794)(1.4983051,
+-1.83)(4.02,-0.9659692)
+\psbezier[linewidth=0.02,linecolor=color236,arrowsize=0.05291667cm 
+2.0,arrowlength=1.4,arrowinset=0.4]{->>}(1.24,-0.53)(3.76,-2.41)(6.54,-1.47)(7.78,-0.93)
+\end{pspicture} 
+\end{center}
+\vspace{-10pt}
+and the code in {\color{red}matlab} which illustrates what is described here is the 
+following.
+\begin{lstlisting}
+function v = maxproduct(A,n)
+assert(isscalar(n) && isnumeric(n) && n >= 0 && ceil(n) == n,'error radius must be greater 
+than zero!');
+c = cell(size(A,1),size(A,2));
+for ii = 1 : size(A,1)
+    for jj = 1 : size(A,2)
+        directions = 'NWNONEEASESOSWWE';
+        try %NW
+            A(ii-n+1:ii,jj-n+1:jj);
+        catch
+            directions(1:2) = 'xx';
+        end
+        try %NO
+            A(ii-n+1:ii,jj);
+        catch
+            directions(3:4) = 'xx';
+        end
+        try %NE
+            A(ii-n+1:ii,jj:jj+n-1);
+        catch
+            directions(5:6) = 'xx';
+        end
+        try %EA
+            A(ii,jj:jj+n-1);
+        catch
+            directions(7:8) = 'xx';
+        end
+        try %SE
+            A(ii:ii+n-1,jj:jj+n-1);
+        catch
+            directions(9:10) = 'xx';
+        end
+        try %SO
+            A(ii:ii+n-1,jj);
+        catch
+            directions(11:12) = 'xx';
+        end
+        try %SW
+            A(ii:ii+n-1,jj-n+1:jj);
+        catch
+            directions(13:14) = 'xx';
+        end
+        try %WE
+            A(ii,jj-n+1:jj);
+        catch
+            directions(15:16) = 'xx';
+        end
+        c{ii,jj} = directions;
+    end
+end
+v = c;
+end
+\end{lstlisting}
+We can test this function for various matrices with various $n>0$ values and this 
+concludes section 1 having solved the problem of the invalid directions for each matrix 
+element.\\
+Examples:
+\begin{lstlisting}
+>>maxproduct([2 3;4 1],2)
+
+ ans =
+    'xxxxxxEASESOxxxx'    'xxxxxxxxxxSOSWWE'
+    'xxNONEEAxxxxxxxx'    'NWNOxxxxxxxxxxWE'
+    
+ >>class(ans)
+ 
+ ans = 
+
+    cell
+    
+>>maxproduct([1 2 3 ; 4 5 6;7 8 9],3)
+
+ ans = 
+
+    'xxxxxxEASESOxxxx'  'xxxxxxxxxxSOxxxx'    'xxxxxxxxxxSOSWWE'
+    'xxxxxxEAxxxxxxxx'  'xxxxxxxxxxxxxxxx'    'xxxxxxxxxxxxxxWE'
+    'xxNONEEAxxxxxxxx'  'xxNOxxxxxxxxxxxx'    'NWNOxxxxxxxxxxWE'
+    
+>>class(ans)
+
+ ans =
+  
+    cell
+\end{lstlisting}
+\section{Maximum Product And Indexes.}
+For the second part of the program, we should be aware that the output must sort the 
+indexes in a row wise ascending order and secondly in a column wise ascending order. Here 
+is a figure to  give us an impression of how we should sort the indexes, the 
+arrows' tails show to us the first term's indexes in the product we compute (if there 
+exists an element in that direction and the direction is not marked as ''xx'') and the 
+arrow's head the element which is  scanned at each time (imagine a planet with its 
+satellites).
+\begin{center}
+\newrgbcolor{ttqqqq}{0.2 0. 0.}
+\psset{xunit=0.6cm,yunit=0.6cm,algebraic=true,dimen=middle,dotstyle=o,dotsize=5pt 
+0,linewidth=1.6pt,arrowsize=3pt 2,arrowinset=0.25}
+\begin{pspicture*}(-6.776363636363642,-7.40181818181816)(10.593636363636364,
+6.578181818181798)
+\rput[tl](0.5,-0.05){$a_{ii,jj}$}
+\rput[tl](0.2136363636363604,1.4181818181818133){$a_{ii-1,jj}$}
+\rput[tl](-0.05636363636363969,3.068181818181808){$a_{ii-n+1,jj}$}
+\rput[tl](0.2436363636363604,-0.7418181818181802){$a_{ii+1,jj}$}
+\rput[tl](0.03363636363636034,-2.6918181818181743){$a_{ii+n-1,jj}$}
+\rput[tl](-5.096363636363641,0.2481818181818168){$a_{ii,jj-n+1}$}
+\rput[tl](-1.9163636363636403,0.2781818181818167){$a_{ii,jj-1}$}
+\rput[tl](2.043636363636361,0.3081818181818166){$a_{ii,jj+1}$}
+\rput[tl](5.223636363636362,0.3081818181818166){$a_{ii,jj+n-1}$}
+\rput[tl](-1.9763636363636403,1.4481818181818131){$a_{ii-1,jj-1}$}
+\rput[tl](-5.066363636363641,3.098181818181808){$a_{ii-n+1,jj-n+1}$}
+\rput[tl](-5.006363636363641,-2.6918181818181743){$a_{ii+n-1,jj-n+1}$}
+\rput[tl](-1.9463636363636403,-0.7418181818181802){$a_{ii+1,jj-1}$}
+\rput[tl](5.193636363636362,3.068181818181808){$a_{ii-n+1,jj+n-1}$}
+\rput[tl](5.223636363636362,-2.5718181818181747){$a_{ii+n-1,jj+n-1}$}
+\rput[tl](2.073636363636361,1.3881818181818133){$a_{ii-1,jj+1}$}
+\rput[tl](2.103636363636361,-0.7118181818181802){$a_{ii+1,jj+1}$}
+\psline[linewidth=0.8pt,linestyle=dashed,dash=2pt 2pt,linecolor=red]{->}(-6.,4.)(0.,0.)
+\psline[linewidth=0.8pt,linestyle=dashed,dash=4pt 
+4pt,linecolor=red]{->}(1.0236363636363606,4.028181818181805)(1.0836363636363606,
+-0.021818181818182403)
+\psline[linewidth=0.8pt,linestyle=dashed,dash=4pt 4pt,linecolor=red]{->}(8.,4.)(2.,0.)
+\psline[linewidth=0.8pt,linestyle=dashed,dash=4pt 
+4pt,linecolor=red]{->}(-6.026363636363642,-0.3818181818181813)(0.09363636363636019,
+-0.4418181818181811)
+\psline[linewidth=0.8pt,linestyle=dashed,dash=4pt 
+4pt,linecolor=red]{<-}(-6.,-4.)(0.003636363636360329,-0.8918181818181798)
+\psline[linewidth=0.8pt,linestyle=dashed,dash=4pt 
+4pt,linecolor=red]{<-}(1.1436363636363607,-4.10181818181817)(1.0836363636363606,
+-0.9818181818181797)
+\psline[linewidth=0.8pt,linestyle=dashed,dash=4pt 
+4pt,linecolor=red]{<-}(8.,-4.)(2.013636363636361,-0.6518181818181805)
+\psline[linewidth=0.8pt,linestyle=dashed,dash=4pt 
+4pt,linecolor=red]{<-}(7.953636363636363,-0.32181818181818145)(1.9536363636363614,
+-0.3818181818181813)
+\end{pspicture*}
+\end{center}
+The question we should next answer is how  we should compute the product in each 
+direction and how we should store the indexes, for which we got a glimpse of how they 
+should be sorted correctly. Let us examine each direction separately:\\
+\textbf{{\color{red}NW.}}\\
+In this case the product is the product of the elements of the diagonal of the 
+north-western $n\times n$ matrix with its lowest right element being $a_{ii,jj}$ and this 
+is as written 
+in {\color{red}matlab} as $A(ii-n+1:ii,jj-n+1:jj)$. 
+\begin{lstlisting}
+product = prod(diag(A(ii-n+1:ii,jj-n+1:jj)))
+indexes = [(ii-n+1:ii)',(jj-n+1:jj)']  
+\end{lstlisting}
+\textbf{{\color{red}NO.}}\\
+In this case the product is the product of the elements of the array in the northern
+direction $n\times 1$ with its last element being $a_{ii,jj}$ and this is written in 
+{\color{red}matlab} as $A(ii-n+1:ii,jj)$. 
+\begin{lstlisting}
+product = prod(A(ii-n+1:ii,jj)))
+indexes = [(ii-n+1:ii)',repmat(jj,n,1)]  
+\end{lstlisting}
+\textbf{{\color{red}NE.}}\\
+In this case the product is the product of the elements of the reverse diagonal of the 
+north-eastern $n\times n$ matrix with its lowest left element being $a_{ii,jj}$ and this 
+is 
+ written in {\color{red}matlab} as $A(ii-n+1:ii,jj:jj+n-1)$. In order to compute the 
+product we will have to flip the matrix upside down and take the indexes from right to 
+left in a column wise direction.
+\begin{lstlisting}
+product = prod(diag(flipud(A(ii-n+1:ii,jj:jj+n-1))))
+indexes = [(ii-n+1:ii)',(jj+n-1:-1:jj)']  
+\end{lstlisting}
+\textbf{{\color{red}EA.}}\\
+In this case the product is the product of the elements of the array of length $n$ in the 
+eastern direction with its first left element 
+being $a_{ii,jj}$ and this is as written in {\color{red}matlab} as $A(ii,jj:jj+n-1)$. 
+\begin{lstlisting}
+product = prod(A(ii,jj:jj+n-1))
+indexes = [repmat(ii,n,1),(jj:jj+n-1)']  
+\end{lstlisting}
+\textbf{{\color{red}SE.}}\\
+In this case the product is the product of the elements of the diagonal of the 
+south-eastern $n\times n$ matrix with its upper left element being $a_{ii,jj}$ and this 
+is as written in {\color{red}matlab} $A(ii:ii+n-1,jj:jj+n-1)$. 
+\begin{lstlisting}
+product = prod(diag(A(ii:ii+n-1:-1,jj:jj+n-1:-1)))
+indexes = [(ii:ii+n-1)',(jj:jj+n-1)']  
+\end{lstlisting}
+\textbf{{\color{red}SO.}}\\
+In this case the product is the product of the elements of the array in the southern
+direction $n\times 1$ with its first element being $a_{ii,jj}$ and this is written in 
+{\color{red}matlab} as $A(ii:ii+n-1,jj)$. 
+\begin{lstlisting}
+product = prod(A(ii:ii+n-1,jj)))
+indexes = [(ii:ii+n-1)',repmat(jj,n,1)] 
+\end{lstlisting}
+\textbf{{\color{red}SW.}}\\
+In this case the product is the product of the elements of the reverse diagonal of the 
+south-western $n\times n$ matrix with its upper right element being $a_{ii,jj}$ and this 
+is written in {\color{red}matlab} as $A(ii:ii+n-1,jj-n+1:jj)$. In order to compute the 
+product we will have to flip the matrix upside down and take the indexes from right to 
+left in a column wise direction.
+\begin{lstlisting}
+product = prod(diag(flipud(A(ii:ii+n-1,jj-n+1:jj))))
+indexes = [(ii:ii+n-1)',(jj:-1:jj-n+1)']  
+\end{lstlisting}
+\textbf{{\color{red}WE.}}\\
+In this case the product is the product of the elements of the array of length $n$ in the 
+western direction with its last right element being $a_{ii,jj}$ and this is as written in 
+{\color{red}matlab} as $A(ii,jj-n+1:jj)$. 
+\begin{lstlisting}
+product = prod(A(ii,jj-n+1:jj))
+indexes = [repmat(ii,n,1),(jj-n+1:jj)']  
+\end{lstlisting}
+and now that we know what to do with the indexes and the products in each direction we 
+are ready for the final step. We can assign an initial value $p=0$ to the product  and 
+an empty initial array of indexes $v = []$, such that if no product greater 
+than zero is found, then the output of the program shall return the empty array. We must 
+iterate through all the elements of cell $c$ created in the first section, get the string 
+of each position, split the string into 8 parts beginning from left to right by step two, 
+see which match a valid direction meaning not equal to ''xx'', then compute the product 
+and finally if that product is greater than $p$ set $v$ equal to the indexes of that 
+combination of terms. In this case the ''switch-case'' function turns to be useful, this 
+gives us the code presented the next page and our program is ready!\pagebreak
+\begin{lstlisting}
+function v = maxproduct(A,n)
+assert(isscalar(n) && isnumeric(n) && n >= 0 && ceil(n) == n,'error radius must be greater 
+than zero!');
+c = cell(size(A,1),size(A,2));
+for ii = 1 : size(A,1)
+    for jj = 1 : size(A,2)
+        directions = 'NWNONEEASESOSWWE';
+        try %NW
+            A(ii-n+1:ii,jj-n+1:jj);
+        catch
+            directions(1:2) = 'xx';
+        end
+        try %NO
+            A(ii-n+1:ii,jj);
+        catch
+            directions(3:4) = 'xx';
+        end
+        try %NE
+            A(ii-n+1:ii,jj:jj+n-1);
+        catch
+            directions(5:6) = 'xx';
+        end
+        try %EA
+            A(ii,jj:jj+n-1);
+        catch
+            directions(7:8) = 'xx';
+        end
+        try %SE
+            A(ii:ii+n-1,jj:jj+n-1);
+        catch
+            directions(9:10) = 'xx';
+        end
+        try %SO
+            A(ii:ii+n-1,jj);
+        catch
+            directions(11:12) = 'xx';
+        end
+        try %SW
+            A(ii:ii+n-1,jj-n+1:jj);
+        catch
+            directions(13:14) = 'xx';
+        end
+        try %WE
+            A(ii,jj-n+1:jj);
+        catch
+            directions(15:16) = 'xx';
+        end
+        c{ii,jj} = directions;
+    end
+end
+p = 0;v = [];
+for ii = 1 : size(c,1)
+    for jj = 1 : size(c,2)
+        el = c{ii,jj};
+        for kk = 1 : 8
+            input = el(2*kk-1:2*kk);
+            switch input
+                case 'NW'
+                    pr    = prod(diag(A(ii-n+1:ii,jj-n+1:jj)));
+                    ind  = [(ii-n+1:ii)',(jj-n+1:jj)'];
+                    if pr > p
+                        v = ind;
+                        p = pr;
+                    end
+                case 'NO'
+                    pr    = prod(A(ii-n+1:ii,jj));
+                    ind  = [(ii-n+1:ii)',repmat(jj,n,1)];
+                    if pr > p;
+                        v = ind;
+                        p = pr;
+                    end
+                case 'NE'
+                    pr    = prod(diag(flipud(A(ii-n+1:ii,jj:jj+n-1))));
+                    ind  = [(ii-n+1:ii)',(jj+n-1:-1:jj)'];
+                    if pr > p
+                        v = ind;
+                        p = pr;
+                    end
+                case 'EA'
+                    pr    = prod(A(ii,jj:jj+n-1));
+                    ind  = [repmat(ii,n,1),(jj:jj+n-1)'];
+                    if pr > p
+                        v = ind;
+                        p = pr;
+                    end
+                case 'SE'
+                    pr    = prod(diag(A(ii:ii+n-1,jj:jj+n-1)));
+                    ind  = [(ii:ii+n-1)',(jj:jj+n-1)'];
+                    if pr > p
+                        v = ind;
+                        p = pr;
+                    end
+                case 'SO'
+                    pr    = prod(A(ii:ii+n-1,jj));
+                    ind  = [(ii:ii+n-1)',repmat(jj,n,1)];
+                    if pr > p
+                        v = ind;
+                        p = pr;
+                    end
+                case 'SW'
+                    pr    = prod(diag(flipud(A(ii:ii+n-1,jj-n+1:jj))));
+                    ind  = [(ii:ii+n-1)',(jj:-1:jj-n+1)'];
+                    if pr > p
+                        v = ind;
+                        p = pr;
+                    end
+                case 'WE'
+                    pr    = prod(A(ii,jj-n+1:jj));
+                    ind  = [repmat(ii,n,1),(jj-n+1:jj)'];
+                    if pr > p
+                        v = ind;
+                        p = pr;
+                    end
+            end
+        end
+    end
+end
+end
+\end{lstlisting}
+\end{document}
