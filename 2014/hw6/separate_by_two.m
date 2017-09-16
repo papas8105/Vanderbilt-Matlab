@@ -6,7 +6,7 @@ end
 even = A(mod(A,2) == 0);
 odd  = A(mod(A,2) == 1);
 if size(even,2) == 1 || size(odd,2) == 1
-    even = even';
+    even = even'  ;
     odd   = odd'  ;
 end
 end
