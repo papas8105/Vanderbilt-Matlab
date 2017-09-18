@@ -1,16 +1,13 @@
-function indices = saddle(M)
-indices = [];
+function indexes = saddle(M)
+indexes = [];
 for ii = 1 : size(M,1)
     for jj = 1 : size(M,2)
-        element         = M(ii,jj);
-        r               = max(M(ii,:));
-        c               = min(M(:,jj));
-        if element >= r && element <= c
-            indices = [indices;ii,jj]; %#ok<*AGROW>
+        if max(M(ii,:)) <= M(ii,jj) && min(M(:,jj)) >= M(ii,jj) 
+            indexes = [indexes;ii,jj]; %#ok<*AGROW>
         end
     end
 end
-if ~isempty(indices)
-    indices = sortrows(indices,2);
+if ~isempty(indexes)
+    indexes = sortrows(indexes,2);
 end
 end

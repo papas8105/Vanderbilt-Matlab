@@ -27,7 +27,6 @@ while p > -0.5
     p=p+2*r(n)*(-1)^(n-1);
     fprintf('N= %d, r= %d, p= %d\n',n,r(n),p)
 end
-
 N=n;
 E=V*n*1e-6;
 plot(1:n,r(1:n))

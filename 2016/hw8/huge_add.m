@@ -17,7 +17,7 @@ end
 %pad leading end of shorter string with zeros.
 pad=[];
 for i=1:abs(length(digitStrA)-length(digitStrB))
-    pad=[pad,'0'];
+    pad=[pad,'0']; %#ok<*AGROW>
 end
 if length(digitStrA)>length(digitStrB)
     digitStrB=[pad,digitStrB];
@@ -30,5 +30,8 @@ for i=length(digitStrA):-1:1
     add=str2num(digitStrA(i))+str2num(digitStrB(i))+carry; %#ok<*ST2NM>
     C(i)=num2str(mod(add,10));
     carry=floor(add/10);
+end
+if carry ~= 0
+    C = [num2str(carry),C];
 end
 end

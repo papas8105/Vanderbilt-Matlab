@@ -1,12 +1,12 @@
 function s = letter_counter(file)
-fid = fopen(file,'r');
+fid = fopen(file);
 if fid < 0
     s = -1;
     return
 end
 s = 0;
 while true
-    l = fgetl(fid)                         ;
+    l = fgetl(fid);
     if ~ischar(l)
         break
     end

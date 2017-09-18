@@ -1,0 +1,99 @@
+\documentclass[10pt]{article}
+\usepackage{amsmath}
+\usepackage{xltxtra}
+\usepackage{unicode-math}
+\setmathfont{Asana-Math.otf}
+\usepackage{pstricks-add}
+\usepackage{geometry}
+\geometry{
+ a4paper,
+ total={210mm,297mm},
+ left=10mm,
+ right=10mm,
+ top=15mm,
+ bottom=15mm,
+ }
+ \usepackage{pgf,tikz}
+\usepackage{mathrsfs}
+\usetikzlibrary{arrows}
+ \usepackage{xcolor,colortbl}\usepackage{multirow}
+\setmainfont[Mapping=tex-text]{Garamond Premier Pro}
+\usepackage{graphicx}\usepackage{sidecap}\usepackage{bbm}
+\title{\textbf{Brief Explanation Of The Code In ''2016/hw8/cyclotron.m''}}
+\author{George Papadopoulos}\date{pgeorgios8@gmail.com}
+\newcommand{\dsp}{\displaystyle}
+\setlength\parindent{0pt}
+\usepackage{pstricks-add}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=cyan}
+\begin{document}
+\maketitle
+\begin{abstract}
+In this article we explore how the cyclotron accelerates  
+\end{abstract}
+\begin{center}
+\definecolor{zzttqq}{rgb}{0.6,0.2,0.}
+\definecolor{ffqqqq}{rgb}{1.,0.,0.}
+\definecolor{yqqqqq}{rgb}{0.5019607843137255,0.,0.}
+\definecolor{zzqqtt}{rgb}{0.6,0.,0.2}
+\definecolor{ccqqqq}{rgb}{0.8,0.,0.}
+\definecolor{wwttqq}{rgb}{0.4,0.2,0.}
+\definecolor{ffqqtt}{rgb}{1.,0.,0.2}
+\definecolor{dcrutc}{rgb}{0.8627450980392157,0.0784313725490196,0.23529411764705882}
+\definecolor{ffttww}{rgb}{1.,0.2,0.4}
+\definecolor{qqzzqq}{rgb}{0.,0.6,0.}
+\definecolor{ffwwzz}{rgb}{1.,0.4,0.6}
+\definecolor{yqqqyq}{rgb}{0.5019607843137255,0.,0.5019607843137255}
+\definecolor{qqttzz}{rgb}{0.,0.2,0.6}
+\begin{tikzpicture}[line cap=round,line join=round,>=triangle 45,x=1.0cm,y=1.0cm]
+\clip(-3.6,-2.76) rectangle (6.,5.);
+\draw [->,line width=1.pt] (-3.2363636363636363,1.) -- (5.763636363636364,1.);
+\draw (0.6662809917355398,0.732396694214878) node[anchor=north west] {(0,0)};
+\draw [shift={(1.2463636363636363,1.)},line width=2.pt,color=ffwwzz]  
+plot[domain=0.:3.141592653589793,variable=\t]({1.*0.7536363636363637*cos(\t 
+r)+0.*0.7536363636363637*sin(\t r)},{0.*0.7536363636363637*cos(\t 
+r)+1.*0.7536363636363637*sin(\t r)});
+\draw [shift={(1.,1.)},line width=2.pt,color=ffttww]  
+plot[domain=3.141592653589793:6.283185307179586,variable=\t]({1.*1.*cos(\t r)+0.*1.*sin(\t 
+r)},{0.*1.*cos(\t r)+1.*1.*sin(\t r)});
+\draw [shift={(1.5,1.)},line width=2.pt,color=ffqqtt]  
+plot[domain=0.:3.141592653589793,variable=\t]({1.*1.5*cos(\t r)+0.*1.5*sin(\t 
+r)},{0.*1.5*cos(\t r)+1.*1.5*sin(\t r)});
+\draw [shift={(1.3009090909090908,1.)},line width=2.pt,color=ccqqqq]  
+plot[domain=3.141592653589793:6.283185307179586,variable=\t]({1.*1.6990909090909092*cos(\t 
+r)+0.*1.6990909090909092*sin(\t r)},{0.*1.6990909090909092*cos(\t 
+r)+1.*1.6990909090909092*sin(\t r)});
+\draw [shift={(1.8009090909090908,1.)},line width=2.pt,color=yqqqqq]  
+plot[domain=0.:3.141592653589793,variable=\t]({1.*2.199090909090909*cos(\t 
+r)+0.*2.199090909090909*sin(\t r)},{0.*2.199090909090909*cos(\t 
+r)+1.*2.199090909090909*sin(\t r)});
+\draw [shift={(0.71,1.)},line width=2.pt,color=zzqqtt]  
+plot[domain=3.141592653589793:6.283185307179586,variable=\t]({1.*3.29*cos(\t 
+r)+0.*3.29*sin(\t r)},{0.*3.29*cos(\t r)+1.*3.29*sin(\t r)});
+\draw [line width=2.pt,dash pattern=on 4pt off 4pt,color=zzttqq] (-2.58,-2.76) -- 
+(-2.58,5.);
+\draw (-2.4576859504132194,4.1538842975206585) node[anchor=north west] {$x = -0.5$};
+\draw [->,line width=2.pt,dash pattern=on 4pt off 4pt,color=zzttqq] (-2.58,1.) -- 
+(-2.58,2.9836363636363648);
+\begin{scriptsize}
+\draw [fill=black] (0.9958198428668696,1.) circle (3.5pt);
+\draw[color=black] (1.112561983471077,1.3687603305785134) node {O};
+\draw [fill=qqttzz] (0.4927272727272727,1.) circle (3.5pt);
+\draw[color=qqttzz] (0.6001652892562009,1.3687603305785134) node {A};
+\draw [fill=yqqqyq] (2.,1.) circle (3.5pt);
+\draw[color=yqqqyq] (2.1208264462809936,1.3687603305785134) node {B};
+\draw [fill=qqzzqq] (0.,1.) circle (3.5pt);
+\draw[color=qqzzqq] (0.12082644628099454,1.3687603305785134) node {C};
+\draw [fill=dcrutc] (3.,1.) circle (3.5pt);
+\draw[color=dcrutc] (3.112561983471076,1.3687603305785134) node {D};
+\draw [fill=wwttqq] (-0.3981818181818184,1.) circle (3.5pt);
+\draw[color=wwttqq] (-0.2758677685950383,1.3687603305785134) node {E};
+\draw [fill=zzqqtt] (4.,1.) circle (3.5pt);
+\draw[color=zzqqtt] (4.120826446280994,1.3687603305785134) node {F};
+\draw [fill=ffqqqq] (-2.58,1.) circle (3.5pt);
+\draw[color=ffqqqq] (-2.4576859504132194,1.3687603305785134) node {G};
+\end{scriptsize}
+\end{tikzpicture}
+\end{center}
+\end{document}

@@ -1,19 +1,16 @@
-function out = sparse_array_out( A , file )
-%test sparse_array_out([0 0 0 1;3 4 0 0;0 0 0 0 ; 0 0 0 0;0 0 0 0; 1 0 1 0],'sparse.txt')
-%it is written in sparse.txt
-fid = fopen(file,'w');
+function out = sparse_array_out(A,file)
+fid = fopen(file,'w+');
 if fid < 0
-    out = false      ;
+    out = false;
 else
-    out = true       ;
+    out = true ;
 end
-[m,n,values] = find(A);
-%line1 
-fwrite(fid,[size(A,1),size(A,2),numel(values)],'uint32');
-%other lines
-for ii = 1 : numel(values)
-    fwrite(fid,[m(ii),n(ii)],'uint32') ;
-    fwrite(fid,values(ii),'double')    ;
+fwrite(fid,[size(A),numel(find(A))],'uint32');
+[m,n,values] = find(A)                       ;
+M = [m,n,values]                             ;
+for ii = 1 : size(M,1)
+    fwrite(fid,M(ii,1:2),'uint32')           ;
+    fwrite(fid,M(ii,3),'double')             ;
 end
 fclose(fid);
 end
