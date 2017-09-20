@@ -1,7 +1,4 @@
 function [ E,N ] = cyclotron( V )
-%CYCLOTRON Summary of this function goes here
-%   Detailed explanation goes here
-
 %deuteron mass / kg
 m=3.344e-27;
 % deuteron charge / C

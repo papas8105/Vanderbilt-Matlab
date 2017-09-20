@@ -31,13 +31,8 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-In this brief article we explore how the cyclotron works and the implementation of the 
-code in \matlab  to compute the energy in MeV the particle has acquired during the 
-acceleration process, along with the number of semicircle trajectories it entered until 
-it exits the device. Most students who tried to solve this problem in \matlab, couldn't 
-understand the hint and tried to solve the problem without having understood that the 
-centers of the semicircles the particle runs on (2-dimensional imagery), fall on 
-different points of the line defined by the distance between the north and south D's.
+In this article we explore how the cyclotron works and the implementation of the code in 
+\matlab  to compute the energy and the number of semicircles 
 \end{abstract}
 \begin{center}
 \definecolor{zzttqq}{rgb}{0.6,0.2,0.}
