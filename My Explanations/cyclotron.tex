@@ -33,12 +33,17 @@
 \begin{abstract}
 In this brief article we explore how the cyclotron works and the implementation of the 
 code in \matlab  to compute the energy in MeV the particle has acquired during the 
-acceleration process, along with the number of semicircle trajectories it entered until 
+acceleration process, along with the number of semicircle trajectories it followed until 
 it exits the device. Most students who tried to solve this problem in \matlab, couldn't 
 understand the hint and tried to solve the problem without having understood that the 
 centers of the semicircles the particle runs on (2-dimensional imagery), fall on 
 different points of the line defined by the distance between the north and south D's.
 \end{abstract}
+The figure we will use to show a simple case with 6 steps (only six accelerations) is 
+shown below this paragraph. We assume that the distance between the north and south 
+semicircles is infinitesimally small  which we define as the ''x-axis'' (with center O) 
+the space in which a positively charged isotope of hydrogen, called \textit{deuteron} is 
+accelerated.
 \begin{center}
 \definecolor{zzttqq}{rgb}{0.6,0.2,0.}
 \definecolor{ffqqqq}{rgb}{1.,0.,0.}
@@ -80,7 +85,7 @@ plot[domain=3.141592653589793:6.283185307179586,variable=\t]({1.*3.29*cos(\t
 r)+0.*3.29*sin(\t r)},{0.*3.29*cos(\t r)+1.*3.29*sin(\t r)});
 \draw [line width=2.pt,dash pattern=on 4pt off 4pt,color=zzttqq] (-2.58,-2.76) -- 
 (-2.58,5.);
-\draw (-2.4576859504132194,4.1538842975206585) node[anchor=north west] {$x = -0.5$};
+\draw (-2.4576859504132194,4.1538842975206585) node[anchor=north west] {$x = - d$};
 \draw [->,line width=2.pt,dash pattern=on 4pt off 4pt,color=zzttqq] (-2.58,1.) -- 
 (-2.58,2.9836363636363648);
 \begin{scriptsize}
@@ -103,4 +108,62 @@ r)+0.*3.29*sin(\t r)},{0.*3.29*cos(\t r)+1.*3.29*sin(\t r)});
 \end{scriptsize}
 \end{tikzpicture}
 \end{center}
+The function we want to define in \matlab takes only one \textbf{scalar} input, which is 
+the voltage applied to the cyclotron. The cyclotron rapidly alternates the sign of the 
+voltage difference V in units of volts between two ''D''-shaped vacuum chambers, which 
+are placed within a strong uniform magnetic field (perpendicular to the page). Each time 
+the particle enters the \textit{x-axis}, it is accelerated instantly by the voltage 
+applied to it increasing its energy, then it enters a ''D''-shaped vacuum chamber with 
+velocity it acquired, which remains constant until it passes again from the ''x-axis'', 
+exits the vacuum and is accelerated again until it finally reaches the exit placed at a 
+distance specified by the conductor of the experiment to the left of the center of the 
+''x-axis'', let us say $-d$, with $d>0$. At time zero, the deuteron of mass $m$ and 
+charge $q$  enters the cyclotron at point A, it is accelerated as long as  it stays in 
+the ''x-axis'' space (infinitesimal fraction of second), then enters the first 
+''D''-vacuum with a constant speed $u_{1}$ and runs with a semi-circle trajectory due to 
+the magnetic field of strength $B$, until it exits at point B. Point A lies at \[s_{0} 
+= -\underbrace{\sqrt{\frac{m\cdot V}{q\cdot B^2}}}_{r_{1}}\]  and point 
+B at $\dsp s_{1} = s_{0}+2\cdot r_{1}$ in the ''x-axis'', with $r_{1}$ being the radius 
+of the first semicircle. The recursive formula given $r_1$, which will give us the next 
+radii is \[
+r_{n} = \sqrt{r_{n-1}^{2}+2\cdot r_{1}^{2}}
+\]
+so in oder to compute the position C, we get $\dsp r_{2} = \sqrt{r_1^2+2\cdot r_1^2}$ and 
+so the position of C in the ''x-axis'' is $\dsp s_{2} = s_{1} - 2\cdot r_{2}$. Following 
+the same computation by adding the diameters when the particle is moving to the east and 
+subtracting when it moves to the western direction, we get $\dsp r_{3} = 
+\sqrt{r_{2}+2\cdot r_{1}^2}$ and $\dsp s_{3} = s_{2} + 2\cdot r_{3}$ (point D), 
+respectively the computations for the other points until the exit point G are, for point 
+E: $\dsp r_{4} = \sqrt{r_3 + 2\cdot r_{1}^2}$ and $s_{4} = s_{3} - 2\cdot r_4$, for point 
+F: $\dsp r_{5} = \sqrt{r_4+2\cdot r_{1}^{2}}$ and $s_{5} = s_{4} + 2\cdot r_5$ and 
+lastly for point G: $\dsp r_{6} = \sqrt{r_{5}+2\cdot r_{1}^{2}}$ and $s_{6} = 
+s_{5}-2\cdot r_{6}$. We started with $N=0$ made the computations of $r_N$ and 
+$s_N$,until $s_{N} > - d$ and since we found the number of spins of the particle in the 
+cyclotron which is the first thing we are asked to compute with the program we are 
+expected to write, we are ready to answer the second question which is to compute the 
+energy that the particle has acquired during the process, which is $E = V\cdot N\cdot 
+10^{-6}$ (MeV) and the program written for $d=0.5$ in \matlab follows.
+\begin{lstlisting}
+function [E,N] = cyclotron(V)
+%deuteron mass in kg
+m = 3.344*1e-27;
+%deuteron charge 1.603 * 1e-19 in Coulomb
+q = 1.603*1e-19;
+%magnetic field strength in Tesla
+B = 1.6;
+%Initial Values for starting radius (r),initial position (p) after first
+%spin and initial spin count (N)
+r = sqrt((m*V)/(q*B^2));
+s = r/2;
+p = -s + 2 * r;
+N = 1;
+while p > - 0.5
+    N = N + 1;
+    r = sqrt(r^2 + (2*m*V)/(q*B^2));
+    p = p + (-1)^(N-1) * 2 * r;
+end
+E = N * V * 1e-6; %MeV
+end
+\end{lstlisting}
+
 \end{document}

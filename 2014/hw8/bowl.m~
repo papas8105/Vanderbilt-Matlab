@@ -27,6 +27,11 @@ for ii = 1 : 10
         c{3,ii} = 'open';
     end
 end
+
+if length(w(w~=0)) ~= length(v) 
+    score = -1;
+    return
+end
 for ii = 1 : 9
     if strcmp(c{3,ii},'open')
         c{4,ii} = c{2,ii};
