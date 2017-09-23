@@ -86,7 +86,7 @@ r)+0.*3.29*sin(\t r)},{0.*3.29*cos(\t r)+1.*3.29*sin(\t r)});
 \draw [line width=2.pt,dash pattern=on 4pt off 4pt,color=zzttqq] (-2.58,-2.76) -- 
 (-2.58,5.);
 \draw (-2.4576859504132194,4.1538842975206585) node[anchor=north west] {$x = - d$};
-\draw [->,line width=2.pt,dash pattern=on 4pt off 4pt,color=zzttqq] (-2.58,1.) -- 
+\draw [->,line width=1.pt,dash pattern=on 4pt off 4pt,color=zzttqq] (-2.58,1.) -- 
 (-2.58,2.9836363636363648);
 \begin{scriptsize}
 \draw [fill=black] (0.9958198428668696,1.) circle (3.5pt);
@@ -113,12 +113,12 @@ the voltage applied to the cyclotron. The cyclotron rapidly alternates the sign 
 voltage difference V in units of volts between two ''D''-shaped vacuum chambers, which 
 are placed within a strong uniform magnetic field (perpendicular to the page). Each time 
 the particle enters the \textit{x-axis}, it is accelerated instantly by the voltage 
-applied to it increasing its energy, then it enters a ''D''-shaped vacuum chamber with 
+applied to it increasing its energy, then it enters a ''D''-shaped vacuum chamber with the
 velocity it acquired, which remains constant until it passes again from the ''x-axis'', 
 exits the vacuum and is accelerated again until it finally reaches the exit placed at a 
 distance specified by the conductor of the experiment to the left of the center of the 
 ''x-axis'', let us say $-d$, with $d>0$. At time zero, the deuteron of mass $m$ and 
-charge $q$  enters the cyclotron at point A, it is accelerated as long as  it stays in 
+charge $q$  enters the cyclotron at point A, it is accelerated for as long as  it stays in 
 the ''x-axis'' space (infinitesimal fraction of second), then enters the first 
 ''D''-vacuum with a constant speed $u_{1}$ and runs with a semi-circle trajectory due to 
 the magnetic field of strength $B$, until it exits at point B. Point A lies at \[s_{0} 
@@ -126,19 +126,17 @@ the magnetic field of strength $B$, until it exits at point B. Point A lies at \
 B at $\dsp s_{1} = s_{0}+2\cdot r_{1}$ in the ''x-axis'', with $r_{1}$ being the radius 
 of the first semicircle. The recursive formula given $r_1$, which will give us the next 
 radii is \[
-r_{n} = \sqrt{r_{n-1}^{2}+2\cdot r_{1}^{2}}
+r_{N} = \sqrt{r_{N-1}^{2}+2\cdot r_{1}^{2}}
 \]
-so in oder to compute the position C, we get $\dsp r_{2} = \sqrt{r_1^2+2\cdot r_1^2}$ and 
-so the position of C in the ''x-axis'' is $\dsp s_{2} = s_{1} - 2\cdot r_{2}$. Following 
-the same computation by adding the diameters when the particle is moving to the east and 
-subtracting when it moves to the western direction, we get $\dsp r_{3} = 
-\sqrt{r_{2}+2\cdot r_{1}^2}$ and $\dsp s_{3} = s_{2} + 2\cdot r_{3}$ (point D), 
-respectively the computations for the other points until the exit point G are, for point 
+so in order to compute the position C, we get $\dsp r_{2} = \sqrt{r_1^2+2\cdot r_1^2}$ and 
+that positions C in $\dsp s_{2} = s_{1} - 2\cdot r_{2}$ of the ''x-axis''. Following 
+the same computation using the recursive formula by adding the diameters when the particle is moving to the eastern direction and subtracting when it moves to the western direction, we get for point D $\dsp r_{3} = \sqrt{r_{2}+2\cdot r_{1}^2}$ and $\dsp s_{3} = s_{2} + 2\cdot r_{3}$. 
+Respectively the computations for the other points until the exit point G are, for point 
 E: $\dsp r_{4} = \sqrt{r_3 + 2\cdot r_{1}^2}$ and $s_{4} = s_{3} - 2\cdot r_4$, for point 
 F: $\dsp r_{5} = \sqrt{r_4+2\cdot r_{1}^{2}}$ and $s_{5} = s_{4} + 2\cdot r_5$ and 
 lastly for point G: $\dsp r_{6} = \sqrt{r_{5}+2\cdot r_{1}^{2}}$ and $s_{6} = 
 s_{5}-2\cdot r_{6}$. We started with $N=0$ made the computations of $r_N$ and 
-$s_N$,until $s_{N} > - d$ and since we found the number of spins of the particle in the 
+$s_N$ until $s_{N} > - d$ and since we found the number of spins of the particle in the 
 cyclotron which is the first thing we are asked to compute with the program we are 
 expected to write, we are ready to answer the second question which is to compute the 
 energy that the particle has acquired during the process, which is $E = V\cdot N\cdot 
