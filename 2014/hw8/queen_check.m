@@ -1,6 +1,7 @@
 function out = queen_check(board)
 assert(ismatrix(board) && size(board,1) == 8 && size(board,2) == 8,'Enter an 8x8 matrix of logical values!');
-%lines 4-11 could be avoided by -----> sum(sum(mod(board,1) == 0)) ~= numel(board)
+%lines 4-11 could be avoided by -----> 
+%assert(sum(sum(mod(board,1) == 0)) ~= numel(board),'The matrix must contain only logical values!');
 for ii = 1 : 8
     for jj = 1 : 8
         if board(ii,jj) ~= 0 && board(ii,jj) ~= 1
