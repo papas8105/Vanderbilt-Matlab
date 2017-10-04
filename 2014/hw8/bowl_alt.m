@@ -111,4 +111,6 @@ valid_games_with_scores;
             fclose(fid)                               ;
         end
     end
+    %In the csv file you will find the valid games with the scores
+    %after running the hw8.p grader
 end
