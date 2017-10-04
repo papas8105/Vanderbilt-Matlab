@@ -67,7 +67,7 @@ if a + b >= 10 %strike
     else
         board{3,10} = 'spare + bonus'  ;
     end
-    s = s + a + b +c    ;
+    s = s + a + b + c   ;
     board{4,10} = s     ;
 else
     if length(v) ~= balls + 1
