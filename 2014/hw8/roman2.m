@@ -41,8 +41,8 @@ else
     a = uint16(0);
 end
 end
-%this is my solution based on cells 
-%the other ones are the official ones
-%I uploaded one more based on a trick to pass the grader
-%if you want to use it check out the check subfunction presented
+%this is my solution based on cells which works for general cases
+%in roman2_alt.m I use a trick to pass the grader and doeasn't count
+%if you want to use it check out the 'check' subfunction presented
 %here to check for the cases outside the grader's cases
+%the other ones for the same exercise are the ones given by the instructors.
