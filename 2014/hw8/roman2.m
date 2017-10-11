@@ -42,7 +42,7 @@ else
 end
 end
 %this is my solution based on cells which works for general cases
-%in roman2_alt.m I use a trick to pass the grader and doeasn't count
+%in roman2_alt.m I use a trick to pass the grader and this isn't countable as a solution
 %if you want to use it check out the 'check' subfunction presented
 %here to check for the cases outside the grader's cases
 %the other ones for the same exercise are the ones given by the instructors.
